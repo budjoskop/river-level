@@ -15,6 +15,16 @@ public func configure(_ app: Application) throws {
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
 
+    
+    if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
+        postgresConfig.tlsConfiguration = .makeClientConfiguration()
+        postgresConfig.tlsConfiguration?.certificateVerification = .none
+        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
+    } else {
+        // ...
+        print("nesto se desava satro")
+    }
+    
     app.migrations.add(CreateRiver())
     
     try app.autoMigrate().wait() // comment this latter, this is doing all the updates in DB
