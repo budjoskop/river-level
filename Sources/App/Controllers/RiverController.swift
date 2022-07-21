@@ -63,7 +63,7 @@ struct RiverController: RouteCollection {
         // fetch xml here from url
         let urlString: String = "https://www.hidmet.gov.rs/latin/prognoza/prognoza_voda.xml"
         let url = URL(string: urlString)
-        let urlRequest = URLRequest(url: url!)
+//        let urlRequest = URLRequest(url: url!)
 //        let (data, urlResponse) = try await URLSession.shared.data(for: urlRequest)
         let data: Data?
         
