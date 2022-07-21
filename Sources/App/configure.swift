@@ -16,14 +16,14 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     
-    if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
-        postgresConfig.tlsConfiguration = .makeClientConfiguration()
-        postgresConfig.tlsConfiguration?.certificateVerification = .none
-        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
-    } else {
-        // ...
-        print("nesto se desava satro")
-    }
+//    if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
+//        postgresConfig.tlsConfiguration = .makeClientConfiguration()
+//        postgresConfig.tlsConfiguration?.certificateVerification = .none
+//        app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
+//    } else {
+//        // ...
+//        print("nesto se desava satro")
+//    }
     
     app.migrations.add(CreateRiver())
     
