@@ -9,7 +9,9 @@ import Foundation
 import Vapor
 import SWXMLHash
 import PostgresNIO
-
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 
 struct RiverController: RouteCollection {
