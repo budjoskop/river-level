@@ -17,7 +17,7 @@ import FoundationNetworking
 struct RiverController: RouteCollection {
     
     
-
+    let dateFormater = DateFormatter()
     
     func boot(routes: RoutesBuilder) throws {
        
@@ -33,7 +33,11 @@ struct RiverController: RouteCollection {
         protected.post("save") { req -> EventLoopFuture<RiverPresentation> in
             print("🎯 POST request to save in DB init 🎯")
             print(try req.auth.require(User.self).name)
-            let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: Date())
+            dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
+            let dateString = dateFormater.string(from: Date())
+            let date = dateFormater.date(from: dateString)
+            
+            let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.river = fetchXml()
             print("✅ success ✅")
             return riverName.save(on: req.db).map {
@@ -49,10 +53,14 @@ struct RiverController: RouteCollection {
         
         // logic bellow is to extract single item from RiverPresentation array
         var cheatArray = [EventLoopFuture<RiverPresentation>]()
-        let singleItem = RiverPresentation.query(on: req.db).first().unwrap {
-            RiverPresentation()
+        let entireArray = RiverPresentation.query(on: req.db).all()
+        let lastItem =  entireArray.map { array in
+            array.last
         }
-        cheatArray.append(singleItem)
+        
+        cheatArray.append(lastItem.unwrap(orElse: {
+            RiverPresentation()
+        }))
         return cheatArray[0]
     }
     
@@ -65,18 +73,11 @@ struct RiverController: RouteCollection {
         // fetch xml here from url
         let urlString: String = "https://www.hidmet.gov.rs/latin/prognoza/prognoza_voda.xml"
         let url = URL(string: urlString)
-//        let urlRequest = URLRequest(url: url!)
-//        let (data, urlResponse) = try await URLSession.shared.data(for: urlRequest)
         let data: Data?
         
         do {
             data = try Data(contentsOf: url!)
-//            print("Some response here: \(data)")
-    //        if let httpResponse = urlResponse as? HTTPURLResponse {
-    //            print("🥁 This is http status: \(httpResponse.statusCode) 🥁")
-    //        }
             let xml = XMLHash.parse(data!)
-//            print("nova provera da li je nil: \(xml)")
             let xmlForParse = xml["feed"]["entry"].all
             let meassurments: [String] = []
             var rivers:[River] = []
@@ -92,14 +93,9 @@ struct RiverController: RouteCollection {
             
             let jsonEncoder = JSONEncoder()
             let jsonDecoder = JSONDecoder()
-            let jsonString: String?
             jsonEncoder.outputFormatting = .prettyPrinted
             do {
                 let jsonData = try jsonEncoder.encode(rivers)
-                 jsonString = String(
-                    data: jsonData,
-                    encoding: String.Encoding.utf8
-                )!
                 let riverStruct =  try jsonDecoder.decode([River].self, from: jsonData)
                 return riverStruct
             } catch {
@@ -108,7 +104,6 @@ struct RiverController: RouteCollection {
         } catch {
             print(error)
         }
-        
         return [River]()
     }
     
@@ -146,14 +141,20 @@ struct RiverController: RouteCollection {
                     let matched = matchRegexPattern(for: "\\d{1,}.\\d{2}", in: helperMeassure[index])
                     
                     if !matched.isEmpty {
-                        dates.append(matched[0])
+                        
+                        let date = Date()
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy"
+                        let yearString = dateFormatter.string(from: date)
+                        
+                        let dateStringFormated = matched[0]+".\(yearString)"
+                        dates.append(dateStringFormated)
                     }
                 }
                
                 let totalDatesCOUNT = helperMeassure.count
 
                 levelsPerRiver = [RiverLevel](repeating: RiverLevel(date: "", level: ""), count: totalDatesCOUNT)
-//                print("Total count: \(dates.count), total levelsPerRiver count: \(levelsPerRiver.count)")
                 
                 for index in 0 ... dates.count - 1 {
                     
@@ -234,3 +235,21 @@ extension Data: AsyncResponseEncodable {
 }
 
 
+extension Date {
+    func getFormattedDate(format: String, inputString: String) -> String {
+        // Create String
+        let string = inputString
+
+        // Create Date Formatter
+        let dateFormatter = DateFormatter()
+
+        // Set Date Format
+        dateFormatter.dateFormat = format
+
+        // Convert String to Date
+        let date = dateFormatter.date(from: string)
+        print("Date extension I have this date: \(date)")
+        
+        return dateFormatter.string(from: date!)
+    }
+}
