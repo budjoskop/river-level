@@ -9,6 +9,10 @@ import Foundation
 import Vapor
 import SWXMLHash
 import PostgresNIO
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 
 
 
@@ -38,6 +42,7 @@ struct RiverController: RouteCollection {
             let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.river = fetchXml()
             req.logger.info("✅ success ✅")
+            
             return riverName.save(on: req.db).map {
                 riverName
             }
