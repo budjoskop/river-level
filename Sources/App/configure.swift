@@ -40,7 +40,7 @@ public func configure(_ app: Application) throws {
 
 
 struct SaveRiversInDB: VaporCronSchedulable {
-    static var expression: String { "* 13 * * *" }
+    static var expression: String { "* * * * *" }
     static let dateFormater = DateFormatter()
     static let river = RiverController()
     
