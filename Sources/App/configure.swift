@@ -1,6 +1,7 @@
 import Fluent
 import FluentPostgresDriver
 import Vapor
+import VaporCron
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -14,6 +15,7 @@ public func configure(_ app: Application) throws {
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
+
 
     
     if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
@@ -29,7 +31,7 @@ public func configure(_ app: Application) throws {
     
     try app.autoMigrate().wait() // comment this latter, this is doing all the updates in DB
     
-    
+    try app.cron.schedule(SaveRiversInDB.self)
     
     // register routes
     try routes(app)
@@ -37,3 +39,28 @@ public func configure(_ app: Application) throws {
 
 
 
+struct SaveRiversInDB: VaporCronSchedulable {
+    static var expression: String { "* 13 * * *" }
+    static let dateFormater = DateFormatter()
+    static let river = RiverController()
+    
+    static func task(on application: Application) -> EventLoopFuture<RiverPresentation> { 
+        print("ComplexJob fired 0")
+        let dateString = dateFormater.string(from: Date())
+        let date = dateFormater.date(from: dateString)
+        let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
+       
+        print("🎯 POST request to save in DB init 🎯")
+//        print(try req.auth.require(User.self).name)
+        dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
+        
+        
+        
+        riverName.river = river.fetchXml()
+        let req = Request(application: application, on: application.db.eventLoop)
+        print("✅ success ✅")
+        return riverName.save(on: req.db).map {
+            riverName
+        }
+    }
+}
