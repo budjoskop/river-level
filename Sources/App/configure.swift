@@ -30,9 +30,9 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateRiver())
     
     try app.autoMigrate().wait() // comment this latter, this is doing all the updates in DB
-    try app.cron.schedule("* * * * *") {
-        app.logger.notice("☕️ Keep server awake ☕️")
-    }
+//    try app.cron.schedule("* * * * *") {
+//        app.logger.notice("☕️ Keep server awake ☕️")
+//    }
     try app.cron.schedule(SaveRiversInDB.self)
     
     // register routes
@@ -42,7 +42,7 @@ public func configure(_ app: Application) throws {
 
 
 struct SaveRiversInDB: VaporCronSchedulable {
-    static var expression: String { "12 */15 * * *" }
+    static var expression: String { "0 16 * * *" }
     static let dateFormater = DateFormatter()
     static let river = RiverController()
     
