@@ -45,7 +45,7 @@ struct SaveRiversInDB: VaporCronSchedulable {
     static let river = RiverController()
     
     static func task(on application: Application) -> EventLoopFuture<RiverPresentation> { 
-        print("ComplexJob fired 0")
+        application.logger.info("🧭 CRON JOB save xml started 🧭")
         let dateString = dateFormater.string(from: Date())
         let date = dateFormater.date(from: dateString)
         let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
@@ -58,7 +58,7 @@ struct SaveRiversInDB: VaporCronSchedulable {
         
         riverName.river = river.fetchXml()
         let req = Request(application: application, on: application.db.eventLoop)
-        print("✅ success ✅")
+        application.logger.info("✅ CRON JOB save xml success ✅")
         return riverName.save(on: req.db).map {
             riverName
         }

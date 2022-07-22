@@ -24,22 +24,22 @@ struct RiverController: RouteCollection {
         
         let protected = routes.grouped(UserAuthenticator())
         protected.get("rivers") { req -> EventLoopFuture<RiverPresentation> in
-            print("🥁 GET request for Rivers init 🥁")
-            print(try req.auth.require(User.self).name)
+            req.logger.info("🥁 GET request for Rivers init 🥁")
+            
             return try readIndex(req: req)
         }
             
 
         protected.post("save") { req -> EventLoopFuture<RiverPresentation> in
-            print("🎯 POST request to save in DB init 🎯")
-            print(try req.auth.require(User.self).name)
+            req.logger.info("🎯 POST request to save in DB init 🎯")
+            
             dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
             let dateString = dateFormater.string(from: Date())
             let date = dateFormater.date(from: dateString)
             
             let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.river = fetchXml()
-            print("✅ success ✅")
+            req.logger.info("✅ success ✅")
             return riverName.save(on: req.db).map {
                 riverName
             }
@@ -248,7 +248,7 @@ extension Date {
 
         // Convert String to Date
         let date = dateFormatter.date(from: string)
-        print("Date extension I have this date: \(date)")
+       
         
         return dateFormatter.string(from: date!)
     }
