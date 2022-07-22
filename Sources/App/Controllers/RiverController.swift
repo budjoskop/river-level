@@ -9,9 +9,7 @@ import Foundation
 import Vapor
 import SWXMLHash
 import PostgresNIO
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
+
 
 
 struct RiverController: RouteCollection {
@@ -25,7 +23,7 @@ struct RiverController: RouteCollection {
         let protected = routes.grouped(UserAuthenticator())
         protected.get("rivers") { req -> EventLoopFuture<RiverPresentation> in
             req.logger.info("🥁 GET request for Rivers init 🥁")
-            
+            print(try req.auth.require(User.self).name)
             return try readIndex(req: req)
         }
             
@@ -36,7 +34,7 @@ struct RiverController: RouteCollection {
             dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
             let dateString = dateFormater.string(from: Date())
             let date = dateFormater.date(from: dateString)
-            
+            print(try req.auth.require(User.self).name)
             let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.river = fetchXml()
             req.logger.info("✅ success ✅")

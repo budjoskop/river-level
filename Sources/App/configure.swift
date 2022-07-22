@@ -44,21 +44,23 @@ struct SaveRiversInDB: VaporCronSchedulable {
     static let dateFormater = DateFormatter()
     static let river = RiverController()
     
-    static func task(on application: Application) -> EventLoopFuture<RiverPresentation> { 
+    static func task(on application: Application) -> EventLoopFuture<RiverPresentation> {
         application.logger.info("🧭 CRON JOB save xml started 🧭")
         let dateString = dateFormater.string(from: Date())
         let date = dateFormater.date(from: dateString)
         let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
-       
         print("🎯 POST request to save in DB init 🎯")
-//        print(try req.auth.require(User.self).name)
         dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
-        
-        
-        
         riverName.river = river.fetchXml()
         let req = Request(application: application, on: application.db.eventLoop)
-        application.logger.info("✅ CRON JOB save xml success ✅")
+        do {
+            req.auth.login(UserAuthenticator())
+            try req.auth.require(UserAuthenticator.self)
+            application.logger.info("✅ CRON JOB save xml success ✅")
+        } catch {
+            application.logger.info("error while saving fetched XML from CRON task: \(error)")
+        }
+        
         return riverName.save(on: req.db).map {
             riverName
         }

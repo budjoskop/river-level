@@ -8,15 +8,19 @@
 import Vapor
 
 
-struct UserAuthenticator: BasicAuthenticator {
+struct UserAuthenticator: BasicAuthenticator, Authenticatable {
     typealias User = App.User
-
+    
+    static let shared = UserAuthenticator()
+    let username = "teamit"
+    let password = "surprizemi"
+    
     func authenticate(
         basic: BasicAuthorization,
         for request: Request
     ) -> EventLoopFuture<Void> {
-        if basic.username == "teamit" && basic.password == "surprizemi" {
-            request.auth.login(User(name: "API user is trying to SAVE / GET"))
+        if basic.username == self.username && basic.password == self.password  {
+            request.auth.login(User(name: "API user is trying to \(request.description)"))
         }
         return request.eventLoop.makeSucceededFuture(())
    }
@@ -24,4 +28,10 @@ struct UserAuthenticator: BasicAuthenticator {
 
 struct User: Authenticatable {
     var name: String
+}
+
+struct UserPassForSaving: Authenticatable {
+    
+    let username = "teamit"
+    let password = "surprizemi"
 }
