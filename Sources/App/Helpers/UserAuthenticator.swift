@@ -15,10 +15,7 @@ struct UserAuthenticator: BasicAuthenticator, Authenticatable {
     let username = "teamit"
     let password = "surprizemi"
     
-    func authenticate(
-        basic: BasicAuthorization,
-        for request: Request
-    ) -> EventLoopFuture<Void> {
+    func authenticate(basic: BasicAuthorization, for request: Request) -> EventLoopFuture<Void> {
         if basic.username == self.username && basic.password == self.password  {
             request.auth.login(User(name: "API user is trying to \(request.description)"))
         }
@@ -26,12 +23,14 @@ struct UserAuthenticator: BasicAuthenticator, Authenticatable {
    }
 }
 
-struct User: Authenticatable {
-    var name: String
-}
 
 struct UserPassForSaving: Authenticatable {
     
     let username = "teamit"
     let password = "surprizemi"
+}
+
+
+struct User: Authenticatable {
+    var name: String
 }

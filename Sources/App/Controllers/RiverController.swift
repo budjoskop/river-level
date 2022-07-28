@@ -181,7 +181,7 @@ struct RiverController: RouteCollection {
                 riverDetails.append(
                     RiverDetails(
                         place: riverPlace,
-                        measurmentPlace: levelsPerRiver
+                        meassurmentDetails: levelsPerRiver
                     )
                 )
                 

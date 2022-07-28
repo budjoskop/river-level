@@ -14,17 +14,36 @@ import Vapor
 struct River: Codable {
     var riverName: String?
     var riverDetails: [RiverDetails]?
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case riverName
+        case riverDetails
+    }
 }
 
 struct RiverDetails: Codable {
     var place: String?
-    var measurmentPlace: [RiverLevel]
+    var meassurmentDetails: [RiverLevel]?
+    
+    enum CodingKeys: String, CodingKey {
+        case place
+        case meassurmentDetails
+        
+    }
 }
 
 
 struct RiverLevel: Codable {
     var date: String?
     var level: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case date
+        case level
+    }
+    
+    
 }
 
 
