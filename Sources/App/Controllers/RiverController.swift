@@ -41,6 +41,7 @@ struct RiverController: RouteCollection {
             print(try req.auth.require(User.self).name)
             let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.rivers = fetchXml()
+            
             req.logger.info("✅ success ✅")
             
             return riverName.save(on: req.db).map {

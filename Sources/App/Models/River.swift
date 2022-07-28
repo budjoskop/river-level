@@ -12,8 +12,12 @@ import Vapor
 // MARK: - Welcomeimport Foundation
 
 struct River: Codable {
+    
+
+    
     var riverName: String?
     var riverDetails: [RiverDetails]?
+    var id = UUID()
     
     
     enum CodingKeys: String, CodingKey {
@@ -25,6 +29,7 @@ struct River: Codable {
 struct RiverDetails: Codable {
     var place: String?
     var meassurmentDetails: [RiverLevel]?
+    var id = UUID()
     
     enum CodingKeys: String, CodingKey {
         case place
@@ -37,6 +42,7 @@ struct RiverDetails: Codable {
 struct RiverLevel: Codable {
     var date: String?
     var level: String?
+    var id = UUID()
     
     enum CodingKeys: String, CodingKey {
         case date
