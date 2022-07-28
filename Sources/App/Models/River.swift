@@ -61,13 +61,13 @@ final class RiverPresentation: Model, Content {
   
   // 4
   @Field(key: "rivers")
-  var river: [River]
+  var rivers: [River]
     
     init() {}
     
     init(id: UUID? = nil, river: [River], dateCreation: Date) {
         self.id = id
-        self.river = river
+        self.rivers = river
         self.dateCreation = dateCreation
     }
 }

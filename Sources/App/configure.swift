@@ -53,7 +53,7 @@ struct SaveRiversInDB: VaporCronSchedulable {
         let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
         print("🎯 POST request to save in DB init 🎯")
         dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
-        riverName.river = river.fetchXml()
+        riverName.rivers = river.fetchXml()
         let req = Request(application: application, on: application.db.eventLoop)
         do {
             req.auth.login(UserAuthenticator())
