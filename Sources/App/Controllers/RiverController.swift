@@ -58,12 +58,16 @@ struct RiverController: RouteCollection {
         // logic bellow is to extract single item from RiverPresentation array
         var cheatArray = [EventLoopFuture<RiverPresentation>]()
         let entireArray = RiverPresentation.query(on: req.db).all()
-        let lastItem =  entireArray.map { array in
-            array.last
-        }
         
+        
+        let lastItem =  entireArray.map { array in
+            
+            array.last
+            
+        }
+        req.logger.info("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
         cheatArray.append(lastItem.unwrap(orElse: {
-            RiverPresentation()
+            RiverPresentation(river: [], dateCreation: Date())
         }))
         return cheatArray[0]
     }
