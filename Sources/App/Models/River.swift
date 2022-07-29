@@ -63,7 +63,7 @@ final class RiverPresentation: Model, Content {
   var id: UUID?
     
     @Field(key: "dateCreation")
-    var dateCreation: Date?
+    var dateCreation: Date
   
   // 4
   @Field(key: "rivers")
@@ -72,9 +72,18 @@ final class RiverPresentation: Model, Content {
     init() {}
     
     init(id: UUID? = nil, river: [River], dateCreation: Date) {
+        
+        let dateFormater = DateFormatter()
+        dateFormater.timeZone = TimeZone.current
+        dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
+        let dateString = dateFormater.string(from: Date())
+        let date = dateFormater.date(from: dateString)
+        print("this is a date for saving: \(date)")
+        
         self.id = id
         self.rivers = river
-        self.dateCreation = dateCreation
+        self.dateCreation = date!
+        
     }
 }
 
