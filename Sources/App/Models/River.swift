@@ -73,12 +73,13 @@ final class RiverPresentation: Model, Content {
     
     init(id: UUID? = nil, river: [River], dateCreation: Date) {
         
+        let now = Date()
         let dateFormater = DateFormatter()
-        dateFormater.timeZone = TimeZone.current
         dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
-        let dateString = dateFormater.string(from: Date())
+        dateFormater.timeZone = TimeZone(abbreviation: "CEST")
+        let dateString = dateFormater.string(from: now)
         let date = dateFormater.date(from: dateString)
-        print("this is a date for saving: \(date)")
+        print("this is a date for saving: \(date!)")
         
         self.id = id
         self.rivers = river

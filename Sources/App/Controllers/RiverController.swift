@@ -175,9 +175,11 @@ struct RiverController: RouteCollection {
                 
                 
                 for index in 0 ... helperMeassure.count - 1 {
-                    let matched = matchRegexPattern(for: "\\-?\\d{1,} cm", in: helperMeassure[index])
+                    var matched = matchRegexPattern(for: "\\-?\\d{1,} cm", in: helperMeassure[index])
                     if !matched.isEmpty {
                         levels.append(matched[0])
+                    } else {
+                        levels.append("- cm")
                     }
                 }
                 
