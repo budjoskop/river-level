@@ -11,6 +11,7 @@ import SWXMLHash
 import PostgresNIO
 #if canImport(FoundationNetworking)
 import FoundationNetworking
+import FluentKit
 #endif
 
 
@@ -51,26 +52,48 @@ struct RiverController: RouteCollection {
     }
 
 
+//
+//    //GET Request /rivers route
+//    func readIndex(req: Request) throws -> EventLoopFuture<RiverPresentation> {
+//
+//        // logic bellow is to extract single item from RiverPresentation array
+//        var cheatArray = [EventLoopFuture<RiverPresentation>]()
+//        let entireArray = RiverPresentation.query(on: req.db).all()
+//
+//
+//        let lastItem =  entireArray.map { array in
+//            array.last
+//        }
+//        req.logger.notice("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
+//
+//        cheatArray.append(lastItem.unwrap(orElse: {
+//            RiverPresentation(river: [], dateCreation: Date())
+//        }))
+//        return cheatArray[0]
+//    }
+    
+    
     
     //GET Request /rivers route
     func readIndex(req: Request) throws -> EventLoopFuture<RiverPresentation> {
         
         // logic bellow is to extract single item from RiverPresentation array
         var cheatArray = [EventLoopFuture<RiverPresentation>]()
-        let entireArray = RiverPresentation.query(on: req.db).all()
-        
-        
+        let entireArray = RiverPresentation.query(on: req.db).sort(\.$dateCreation).all()
+       
+
         let lastItem =  entireArray.map { array in
             array.last
         }
         req.logger.notice("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
-        
+
         cheatArray.append(lastItem.unwrap(orElse: {
             RiverPresentation(river: [], dateCreation: Date())
         }))
+        
         return cheatArray[0]
+        
     }
-    
     
     
     
