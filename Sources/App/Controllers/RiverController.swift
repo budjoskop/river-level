@@ -61,11 +61,10 @@ struct RiverController: RouteCollection {
         
         
         let lastItem =  entireArray.map { array in
-            
             array.last
-            
         }
-        req.logger.info("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
+        req.logger.notice("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
+        
         cheatArray.append(lastItem.unwrap(orElse: {
             RiverPresentation(river: [], dateCreation: Date())
         }))
