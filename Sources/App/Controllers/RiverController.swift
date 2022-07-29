@@ -37,12 +37,14 @@ struct RiverController: RouteCollection {
             req.logger.info("🎯 POST request to save in DB init 🎯")
             
             dateFormater.dateFormat = "MM-dd-yyyy HH:mm"
+            
             let dateString = dateFormater.string(from: Date())
             let date = dateFormater.date(from: dateString)
             print(try req.auth.require(User.self).name)
             let riverName = RiverPresentation(id: nil, river: [River](), dateCreation: date!)
             riverName.rivers = fetchXml()
-            
+            riverName.dateCreation = date!
+            print(riverName.dateCreation)
             req.logger.info("✅ success ✅")
             
             return riverName.save(on: req.db).map {
@@ -51,26 +53,6 @@ struct RiverController: RouteCollection {
         }
     }
 
-
-//
-//    //GET Request /rivers route
-//    func readIndex(req: Request) throws -> EventLoopFuture<RiverPresentation> {
-//
-//        // logic bellow is to extract single item from RiverPresentation array
-//        var cheatArray = [EventLoopFuture<RiverPresentation>]()
-//        let entireArray = RiverPresentation.query(on: req.db).all()
-//
-//
-//        let lastItem =  entireArray.map { array in
-//            array.last
-//        }
-//        req.logger.notice("✅ THIS IS LAST ITEM IN ARRAY: \(lastItem) ✅")
-//
-//        cheatArray.append(lastItem.unwrap(orElse: {
-//            RiverPresentation(river: [], dateCreation: Date())
-//        }))
-//        return cheatArray[0]
-//    }
     
     
     
