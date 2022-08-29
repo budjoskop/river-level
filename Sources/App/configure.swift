@@ -16,6 +16,8 @@ public func configure(_ app: Application) throws {
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
 
+    app.http.server.configuration.hostname = "127.0.0.1"
+    app.http.server.configuration.port = 8000
 
     
     if let databaseURL = Environment.get("DATABASE_URL"), var postgresConfig = PostgresConfiguration(url: databaseURL) {
