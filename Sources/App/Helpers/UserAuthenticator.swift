@@ -11,6 +11,7 @@ import Vapor
 struct UserAuthenticator: BasicAuthenticator, Authenticatable {
     typealias User = App.User
     
+    //Auth for API call
     static let shared = UserAuthenticator()
     let username = "teamit"
     let password = "surprizemi"
