@@ -6,13 +6,13 @@
 //
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 import Vapor
 import SWXMLHash
 import PostgresNIO
-#if canImport(FoundationNetworking)
-import FoundationNetworking
 import FluentKit
-#endif
 
 
 
