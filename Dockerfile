@@ -1,10 +1,10 @@
 # ================================
 # Build image
 # ================================
-# ================================
-# Run image
-# ================================
-FROM ubuntu:focal
+FROM swift:5.6-focal as build
+
+
+
 
 # Make sure all system packages are up to date, and install only essential packages.
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
