@@ -54,6 +54,12 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q install -y \
       ca-certificates \
       tzdata \
+      openssl \
+      libssl-dev \
+      unzip \
+      zip \
+      libzip-dev \
+      libplist3 \
 # If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
       libcurl4 \
 # If your app or its dependencies import FoundationXML, also install `libxml2`.
