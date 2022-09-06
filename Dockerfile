@@ -1,13 +1,29 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.6-focal as build
+# ================================
+# Run image
+# ================================
+FROM ubuntu:focal
 
-# Install OS updates and, if needed, sqlite3
+# Make sure all system packages are up to date, and install only essential packages.
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update \
     && apt-get -q dist-upgrade -y \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get -q install -y \
+      ca-certificates \
+      tzdata \
+      openssl \
+      libssl-dev \
+      unzip \
+      zip \
+      libzip-dev \
+      libplist3 \
+# If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
+      libcurl4 \
+# If your app or its dependencies import FoundationXML, also install `libxml2`.
+      libxml2 \
+    && rm -r /var/lib/apt/lists/*
 
 # Set up a build area
 WORKDIR /build
