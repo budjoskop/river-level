@@ -150,6 +150,7 @@ struct RiverController: RouteCollection {
             
                 var levelsPerRiver: [RiverLevel] = []
                 var levels = [String]()
+                var levelsInt = [Int]()
                 var dates = [String]()
                 
                 for index in 0 ... helperMeassure.count - 1 {
@@ -178,18 +179,37 @@ struct RiverController: RouteCollection {
                 
                 
                 for index in 0 ... helperMeassure.count - 1 {
-                    var matched = matchRegexPattern(for: "\\-?\\d{1,} cm", in: helperMeassure[index])
+                    let matched = matchRegexPattern(for: "\\-?\\d{1,} cm", in: helperMeassure[index])
+                    
                     if !matched.isEmpty {
                         levels.append(matched[0])
+                        
+                        //Conversion from string to INT for levels
+                        var matchedInt: Int?
+                        if matched[0].contains("-") {
+                            matchedInt = Int(matched[0].components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+                            matchedInt = (matchedInt ?? 0) * (-1)
+                            print("This is levels negative: \(String(describing: matchedInt))")
+                            levelsInt.append(matchedInt!)
+                        } else if !matched[0].contains("-") {
+                            matchedInt = Int(matched[0].components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+                            levelsInt.append(matchedInt!)
+                            print("This is levels postive: \(String(describing: matchedInt))")
+                        }
+
                     } else {
                         levels.append("- cm")
+                        levelsInt.append(0)
                     }
                 }
                 
                 
                 for index in 0 ... levels.count - 1 {
                     levelsPerRiver[index].level = levels[index]
+                    levelsPerRiver[index].levelInt = levelsInt[index]
                 }
+                
+
                 
                 
                 riverDetails.append(

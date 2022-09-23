@@ -42,11 +42,14 @@ struct RiverDetails: Codable {
 struct RiverLevel: Codable {
     var date: String?
     var level: String?
+    // ovo sam dodao, ovde je pocetak agonije
+    var levelInt: Int? 
     var id = UUID()
     
     enum CodingKeys: String, CodingKey {
         case date
         case level
+        case levelInt
     }
     
     
